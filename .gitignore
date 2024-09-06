@@ -1,0 +1,19 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Environment variables file
+.env
+
+# IDE-specific files
+.idea/
+.vscode/
+
+# This is the repopack genared file that
+# contains the whole repo content for
+# submitting to AIs, like Claude
+lumino-sdk-python.txt
+
+# OS-specific files
+.DS_Store
+Thumbs.db

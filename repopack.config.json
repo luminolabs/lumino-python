@@ -1,0 +1,16 @@
+{
+  "output": {
+    "filePath": "lumino-sdk-python.txt",
+    "style": "plain",
+    "headerText": "Lumino SDK Python",
+    "removeComments": false,
+    "removeEmptyLines": false,
+    "showLineNumbers": false,
+    "topFilesLength": 0
+  },
+  "include": ["**/*"],
+  "ignore": {
+    "useGitignore": true,
+    "useDefaultPatterns": true
+  }
+}
