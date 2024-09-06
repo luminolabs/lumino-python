@@ -11,7 +11,7 @@ from lumino.models import (
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('e2e_test')
 
 # Get API key and base URL from environment variables
 API_KEY = os.environ.get("LUMSDK_API_KEY")
