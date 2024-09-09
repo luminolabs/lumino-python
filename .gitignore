@@ -1,6 +1,7 @@
 # Python cache files
 __pycache__/
 *.py[cod]
+*.egg-info/
 
 # Environment variables file
 .env
