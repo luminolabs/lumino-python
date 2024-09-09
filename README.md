@@ -21,29 +21,15 @@ pip install "git+ssh://git@github.com/luminolabs/lumino-sdk-python.git"
 
 ## Quick Start
 
-Here's a simple example of how to use the Lumino SDK:
+Here's a simple example of how to use the Lumino SDK. More examples under `tests/e2e_test.py`.
 
 ```python
 import asyncio
 from lumino.sdk import LuminoSDK
-from lumino.models import DatasetCreate
 
 async def main():
     async with LuminoSDK("your-api-key") as sdk:
-        # Get current user info
-        user = await sdk.get_current_user()
-        print(f"Current user: {user.name}")
-
-        # Upload a dataset
-        dataset = await sdk.upload_dataset(
-            "path/to/your/dataset.jsonl",
-            DatasetCreate(name="my_dataset", description="A test dataset")
-        )
-        print(f"Uploaded dataset: {dataset.name}")
-
-        # List fine-tuning jobs
-        jobs = await sdk.list_fine_tuning_jobs()
-        print(f"You have {len(jobs.data)} fine-tuning jobs")
+        user = await sdk.user.get_current_user()
 
 asyncio.run(main())
 ```
