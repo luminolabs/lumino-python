@@ -16,7 +16,7 @@ The Lumino SDK for Python provides a convenient way to interact with the Lumino 
 You can install the Lumino SDK using pip:
 
 ```bash
-pip install lumino-sdk
+pip install "git+ssh://git@github.com/luminolabs/lumino-sdk-python.git"
 ```
 
 ## Quick Start
