@@ -124,12 +124,21 @@ class DatasetResponse(BaseModel):
     errors: Optional[Dict[str, Any]]
 
 
+class FineTuningJobParameters(BaseModel):
+    """Model for fine-tuning job parameters."""
+    batch_size: int = Field(default=2, gt=0, le=8)
+    shuffle: bool = Field(default=True)
+    num_epochs: int = Field(default=1, gt=0, le=10)
+    use_lora: bool = Field(default=True)
+    use_qlora: bool = Field(default=False)
+
+
 class FineTuningJobCreate(BaseModel):
     """Model for creating a new fine-tuning job."""
     base_model_name: str
     dataset_name: str
     name: str = Field(..., min_length=1, max_length=255)
-    parameters: Dict[str, Any]
+    parameters: FineTuningJobParameters
 
 
 class FineTuningJobResponse(BaseModel):
