@@ -28,7 +28,7 @@ import asyncio
 from lumino.sdk import LuminoSDK
 
 async def main():
-    async with LuminoSDK("your-api-key") as sdk:
+    async with LuminoSDK("your-api-key", "http://localhost:5100/v1") as sdk:
         user = await sdk.user.get_current_user()
 
 asyncio.run(main())
