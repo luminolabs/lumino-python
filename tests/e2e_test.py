@@ -146,10 +146,6 @@ async def run_e2e_test():
         usage_records = await sdk.usage.list_usage_records(start_date, end_date)
         logger.info(f"Listed {len(usage_records.data)} usage records")
 
-        # Clean up
-        await sdk.dataset.delete_dataset(dataset.name)
-        logger.info(f"Deleted dataset: {dataset.name}")
-
         logger.info("\nEnd-to-end test completed successfully!")
 
 if __name__ == "__main__":
