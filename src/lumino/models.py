@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from pydantic import BaseModel, Field, EmailStr
 from typing import List, Optional, Dict, Any
 from datetime import datetime
@@ -64,6 +66,7 @@ class UserResponse(BaseModel):
     status: UserStatus
     name: str
     email: EmailStr
+    credits_balance: Decimal
 
 
 class ApiKeyCreate(BaseModel):
@@ -189,6 +192,7 @@ class UsageRecordResponse(BaseModel):
     created_at: datetime
     service_name: str
     usage_amount: float
+    usage_unit: str
     cost: float
     fine_tuning_job_name: str
 
@@ -198,6 +202,13 @@ class TotalCostResponse(BaseModel):
     start_date: datetime
     end_date: datetime
     total_cost: float
+
+
+class CreditHistoryResponse(BaseModel):
+    """Model for credit history response data."""
+    id: str
+    created_at: datetime
+    credits: Decimal
 
 
 class ListResponse(BaseModel):

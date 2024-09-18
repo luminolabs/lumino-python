@@ -11,6 +11,7 @@ from datetime import datetime
 
 import aiohttp
 
+from lumino.billing import BillingEndpoint
 from lumino.exceptions import LuminoAPIError
 from lumino.user import UserEndpoint
 from lumino.api_key import ApiKeyEndpoint
@@ -66,6 +67,7 @@ class LuminoSDK:
         self.fine_tuning = FineTuningEndpoint(self)
         self.model = ModelEndpoint(self)
         self.usage = UsageEndpoint(self)
+        self.billing = BillingEndpoint(self)
 
     async def __aenter__(self) -> 'LuminoSDK':
         """Set up the aiohttp session when entering an async context."""

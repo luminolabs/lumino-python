@@ -146,6 +146,10 @@ async def run_e2e_test():
         usage_records = await sdk.usage.list_usage_records(start_date, end_date)
         logger.info(f"Listed {len(usage_records.data)} usage records")
 
+        # Test Credits
+        credits = await sdk.billing.get_credit_history(start_date, end_date)
+        logger.info(f"Credit history from {start_date} to {end_date}: {credits.data}")
+
         logger.info("\nEnd-to-end test completed successfully!")
 
 if __name__ == "__main__":
