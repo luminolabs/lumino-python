@@ -47,13 +47,13 @@ class LuminoSDK:
     model information retrieval, and usage tracking.
     """
 
-    def __init__(self, api_key: str, base_url: str = "https://api.lumino.ai/v1"):
+    def __init__(self, api_key: str, base_url: str = "https://api.luminolabs.ai/v1"):
         """
         Initialize the LuminoSDK.
 
         Args:
             api_key (str): The API key for authentication.
-            base_url (str): The base URL of the Lumino API. Defaults to "https://api.lumino.ai/v1".
+            base_url (str): The base URL of the Lumino API. Defaults to "https://api.luminolabs.ai/v1".
         """
         self._api_key = api_key  # Changed from self.api_key to self._api_key
         self.base_url = base_url

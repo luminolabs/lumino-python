@@ -7,10 +7,10 @@ with open("VERSION", "r", encoding="utf-8") as fh:
     version = fh.read()
 
 setup(
-    name="lumino-sdk-python",
+    name="lumino",
     version=version,
     author="Lumino Labs AI",
-    author_email="support@luminolabs.ai",
+    author_email="engg@luminolabs.ai",
     description="A Python SDK for interacting with the Lumino Labs API",
     long_description=long_description,
     long_description_content_type="text/markdown",

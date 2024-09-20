@@ -16,10 +16,11 @@ logger = logging.getLogger('e2e_test')
 
 # Get API key and base URL from environment variables
 API_KEY = os.environ.get("LUMSDK_API_KEY")
-BASE_URL = os.environ.get("LUMSDK_BASE_URL", "https://api.lumino.ai/v1")
+BASE_URL = os.environ.get("LUMSDK_BASE_URL", "https://api.luminolabs.ai/v1")
 
 # Generate a random 4-digit suffix for unique naming
 RANDOM_SUFFIX = f"{random.randint(1000, 9999):04d}"
+
 
 def add_suffix(name: str) -> str:
     """
@@ -37,6 +38,7 @@ def add_suffix(name: str) -> str:
     name = re.sub(r'^-+|-+$', '', name)
     name = re.sub(r'-+', '-', name)
     return f"{name}-{RANDOM_SUFFIX}"
+
 
 async def run_e2e_test():
     """
