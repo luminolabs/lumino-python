@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 dist/
+build/
 
 # Environment variables file
 .env

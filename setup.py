@@ -11,6 +11,7 @@ setup(
     version=version,
     author="Lumino Labs AI",
     author_email="engg@luminolabs.ai",
+    license="Apache License 2.0",
     description="A Python SDK for interacting with the Lumino Labs API",
     long_description=long_description,
     long_description_content_type="text/markdown",
