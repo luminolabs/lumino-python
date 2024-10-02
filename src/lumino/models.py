@@ -38,6 +38,13 @@ class FineTuningJobStatus(str, Enum):
     STOPPED = "STOPPED"
 
 
+class FineTuningJobType(str, Enum):
+    """Enumeration of possible fine-tuning job types."""
+    FULL = "FULL"
+    LORA = "LORA"
+    QLORA = "QLORA"
+
+
 class BaseModelStatus(str, Enum):
     """Enumeration of possible base model statuses."""
     ACTIVE = "ACTIVE"
@@ -132,8 +139,8 @@ class FineTuningJobParameters(BaseModel):
     batch_size: int = Field(default=2, gt=0, le=8)
     shuffle: bool = Field(default=True)
     num_epochs: int = Field(default=1, gt=0, le=10)
-    use_lora: bool = Field(default=True)
-    use_qlora: bool = Field(default=False)
+    lr: float = Field(default=3e-4, gt=0, le=1)
+    seed: Optional[int] = Field(None, ge=0)
 
 
 class FineTuningJobCreate(BaseModel):
@@ -141,6 +148,7 @@ class FineTuningJobCreate(BaseModel):
     base_model_name: str
     dataset_name: str
     name: str = Field(..., min_length=1, max_length=255)
+    type: FineTuningJobType = Field(FineTuningJobType.LORA, description="The type of fine-tuning job")
     parameters: FineTuningJobParameters
 
 
@@ -153,6 +161,7 @@ class FineTuningJobResponse(BaseModel):
     dataset_name: str
     status: FineTuningJobStatus
     name: str
+    type: FineTuningJobType
     current_step: Optional[int]
     total_steps: Optional[int]
     current_epoch: Optional[int]
@@ -182,7 +191,6 @@ class FineTunedModelResponse(BaseModel):
     created_at: datetime
     fine_tuning_job_name: str
     name: str
-    description: Optional[str]
     artifacts: Optional[Dict[str, Any]]
 
 
