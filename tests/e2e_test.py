@@ -4,11 +4,12 @@ import os
 import random
 import re
 from datetime import datetime, timedelta, date
-from lumino.sdk import LuminoSDK
+
 from lumino.models import (
     UserUpdate, ApiKeyCreate, DatasetCreate, FineTuningJobCreate,
     ApiKeyUpdate, DatasetUpdate, FineTuningJobParameters
 )
+from lumino.sdk import LuminoSDK
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)

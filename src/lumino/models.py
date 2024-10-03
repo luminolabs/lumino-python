@@ -1,9 +1,9 @@
-from decimal import Decimal
-
-from pydantic import BaseModel, Field, EmailStr
-from typing import List, Optional, Dict, Any
+import json
 from datetime import datetime
 from enum import Enum
+from typing import List, Optional, Dict, Any
+
+from pydantic import BaseModel as _BaseModel, Field, EmailStr
 
 
 class UserStatus(str, Enum):
@@ -52,6 +52,14 @@ class BaseModelStatus(str, Enum):
     DEPRECATED = "DEPRECATED"
 
 
+class BaseModel(_BaseModel):
+    """Base model for all models."""
+    def __repr__(self):
+        return self.__str__()
+    def __str__(self):
+        return self.model_dump_json(indent=2)
+
+
 class Pagination(BaseModel):
     """Model for pagination information."""
     total_pages: int
@@ -73,7 +81,7 @@ class UserResponse(BaseModel):
     status: UserStatus
     name: str
     email: EmailStr
-    credits_balance: Decimal
+    credits_balance: float
 
 
 class ApiKeyCreate(BaseModel):
@@ -216,7 +224,7 @@ class CreditHistoryResponse(BaseModel):
     """Model for credit history response data."""
     id: str
     created_at: datetime
-    credits: Decimal
+    credits: float
 
 
 class ListResponse(BaseModel):
