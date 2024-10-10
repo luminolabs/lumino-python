@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, date
 
 from lumino.models import (
     UserUpdate, ApiKeyCreate, DatasetCreate, FineTuningJobCreate,
-    ApiKeyUpdate, DatasetUpdate, FineTuningJobParameters
+    ApiKeyUpdate, DatasetUpdate, FineTuningJobParameters, FineTuningJobType
 )
 from lumino.sdk import LuminoSDK
 
@@ -101,12 +101,11 @@ async def run_e2e_test():
                 base_model_name=selected_base_model,
                 dataset_name=dataset.name,
                 name=add_suffix("test-fine-tuning-job"),
+                type=FineTuningJobType.LORA,
                 parameters=FineTuningJobParameters(
                     batch_size=2,
                     shuffle=True,
                     num_epochs=1,
-                    use_lora=True,
-                    use_qlora=False
                 )
             ))
             logger.info(f"Created fine-tuning job: {job.name} (ID: {job.id})")

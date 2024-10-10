@@ -1,12 +1,5 @@
-"""
-Dataset operation endpoints for the Lumino SDK.
-
-This module contains the DatasetEndpoint class, which provides methods
-for interacting with dataset-related API endpoints.
-"""
-
 import logging
-from typing import Any, List
+from typing import Any
 
 import aiohttp
 
@@ -139,28 +132,3 @@ class DatasetEndpoint:
         """
         self.logger.info("Deleting dataset: %s", dataset_name)
         await self._sdk._request("DELETE", f"/datasets/{dataset_name}")
-
-    async def download_dataset(self, dataset_name: str, output_path: str) -> None:
-        """
-        Download a dataset.
-
-        Args:
-            dataset_name (str): The name of the dataset to download.
-            output_path (str): The path where the downloaded dataset will be saved.
-
-        Raises:
-            LuminoAPIError: If the API request fails.
-            IOError: If there's an error writing the file.
-        """
-        self.logger.info("Downloading dataset: %s", dataset_name)
-        response = await self._sdk._request("GET", f"/datasets/{dataset_name}/download", stream=True)
-
-        try:
-            with open(output_path, 'wb') as f:
-                async for chunk in response.content.iter_chunked(8192):
-                    f.write(chunk)
-        except IOError as e:
-            self.logger.error("Error writing dataset to file: %s", str(e))
-            raise
-
-        self.logger.info("Dataset downloaded successfully to: %s", output_path)

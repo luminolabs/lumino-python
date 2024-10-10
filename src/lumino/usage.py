@@ -1,13 +1,6 @@
-"""
-Usage tracking endpoints for the Lumino SDK.
-
-This module contains the UsageEndpoint class, which provides methods
-for interacting with usage-related API endpoints.
-"""
-
 import logging
+from datetime import date
 from typing import Any, Optional
-from datetime import datetime, date
 
 from lumino.models import (
     UsageRecordResponse,
