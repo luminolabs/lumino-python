@@ -1,12 +1,5 @@
-"""
-Fine-tuning job management endpoints for the Lumino SDK.
-
-This module contains the FineTuningEndpoint class, which provides methods
-for interacting with fine-tuning job-related API endpoints.
-"""
-
 import logging
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from lumino.models import (
     FineTuningJobCreate,
@@ -109,58 +102,3 @@ class FineTuningEndpoint:
         self.logger.info("Cancelling fine-tuning job: %s", job_name)
         data = await self._sdk._request("POST", f"/fine-tuning/{job_name}/cancel")
         return FineTuningJobDetailResponse(**data)
-
-    async def delete_fine_tuning_job(self, job_name: str) -> None:
-        """
-        Delete a fine-tuning job.
-
-        Args:
-            job_name (str): The name of the fine-tuning job to delete.
-
-        Raises:
-            LuminoAPIError: If the API request fails.
-        """
-        self.logger.info("Deleting fine-tuning job: %s", job_name)
-        await self._sdk._request("DELETE", f"/fine-tuning/{job_name}")
-
-    async def get_fine_tuning_job_metrics(self, job_name: str) -> dict:
-        """
-        Get metrics for a specific fine-tuning job.
-
-        Args:
-            job_name (str): The name of the fine-tuning job.
-
-        Returns:
-            dict: A dictionary containing metrics for the fine-tuning job.
-
-        Raises:
-            LuminoAPIError: If the API request fails.
-        """
-        self.logger.info("Getting metrics for fine-tuning job: %s", job_name)
-        data = await self._sdk._request("GET", f"/fine-tuning/{job_name}/metrics")
-        return data
-
-    async def get_fine_tuning_job_logs(self, job_name: str, start_time: Optional[str] = None,
-                                       end_time: Optional[str] = None) -> List[str]:
-        """
-        Get logs for a specific fine-tuning job.
-
-        Args:
-            job_name (str): The name of the fine-tuning job.
-            start_time (Optional[str]): The start time for log retrieval (ISO format).
-            end_time (Optional[str]): The end time for log retrieval (ISO format).
-
-        Returns:
-            List[str]: A list of log entries for the fine-tuning job.
-
-        Raises:
-            LuminoAPIError: If the API request fails.
-        """
-        self.logger.info("Getting logs for fine-tuning job: %s", job_name)
-        params = {}
-        if start_time:
-            params["start_time"] = start_time
-        if end_time:
-            params["end_time"] = end_time
-        data = await self._sdk._request("GET", f"/fine-tuning/{job_name}/logs", params=params)
-        return data["logs"]
