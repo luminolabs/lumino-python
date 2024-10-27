@@ -79,6 +79,12 @@ class BillingTransactionType(str, Enum):
     STRIPE_CHECKOUT = "STRIPE_CHECKOUT"
 
 
+# Enumeration for compute providers
+class ComputeProvider(str, Enum):
+    GCP = "GCP"
+    LUM = "LUM"
+
+
 class BaseModel(_BaseModel):
     """Base model for all models."""
     def __repr__(self):
@@ -232,6 +238,7 @@ class FineTuningJobCreate(BaseModel):
     dataset_name: str = Field(..., description="The name of the dataset to use for fine-tuning")
     name: str = NameField(..., description="The name of the fine-tuning job")
     type: FineTuningJobType = Field(..., description="The type of fine-tuning job to run")
+    provider: ComputeProvider = Field(ComputeProvider.GCP, description="The compute provider to use for fine-tuning")
     parameters: FineTuningJobParameters = Field(..., description="The parameters for the fine-tuning job")
 
 
@@ -247,6 +254,7 @@ class FineTuningJobResponse(BaseModel):
     status: FineTuningJobStatus = Field(..., description="The current status of the fine-tuning job")
     name: str = Field(..., description="The name of the fine-tuning job")
     type: FineTuningJobType = Field(..., description="The type of fine-tuning job")
+    provider: ComputeProvider = Field(..., description="The compute provider used for fine-tuning")
     current_step: int | None = Field(None, description="The current step of the fine-tuning process")
     total_steps: int | None = Field(None, description="The total number of steps in the fine-tuning process")
     current_epoch: int | None = Field(None, description="The current epoch of the fine-tuning process")
