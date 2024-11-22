@@ -39,6 +39,7 @@ class FineTuningJobStatus(str, Enum):
     STOPPED = "STOPPED"  # Job has been stopped by the user or system
     COMPLETED = "COMPLETED"  # Job has completed successfully
     FAILED = "FAILED"  # Job has failed to complete
+    DELETED = "DELETED"  # Job has been marked as deleted
 
 
 class FineTuningJobType(str, Enum):
@@ -79,16 +80,24 @@ class BillingTransactionType(str, Enum):
     STRIPE_CHECKOUT = "STRIPE_CHECKOUT"
 
 
-# Enumeration for compute providers
+class FineTunedModelStatus(str, Enum):
+    """Enum of possible fine-tuned model statuses."""
+    ACTIVE = "ACTIVE"
+    DELETED = "DELETED"
+
+
 class ComputeProvider(str, Enum):
+    """Enum of possible compute providers."""
     GCP = "GCP"
     LUM = "LUM"
 
 
 class BaseModel(_BaseModel):
     """Base model for all models."""
+
     def __repr__(self):
         return self.__str__()
+
     def __str__(self):
         return self.model_dump_json(indent=2)
 
@@ -269,7 +278,8 @@ class FineTuningJobDetailResponse(FineTuningJobResponse):
     """
     parameters: Dict[str, Any] = Field(..., description="The parameters used for the fine-tuning job")
     metrics: Dict[str, Any] | None = Field(None, description="The metrics collected during the fine-tuning process")
-    timestamps: Dict[str, Any] | None = Field(None, description="The timestamps recorded during the fine-tuning process")
+    timestamps: Dict[str, Any] | None = Field(None,
+                                              description="The timestamps recorded during the fine-tuning process")
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -292,9 +302,12 @@ class FineTunedModelResponse(BaseModel):
     """
     id: UUID = Field(..., description="The unique identifier of the fine-tuned model")
     created_at: DateTime = Field(..., description="The timestamp when the fine-tuned model was created")
+    updated_at: DateTime = Field(..., description="The timestamp when the fine-tuned model was last updated")
     fine_tuning_job_name: str = Field(..., description="The name of the associated fine-tuning job")
+    status: FineTunedModelStatus = Field(..., description="The current status of the fine-tuned model")
     name: str = Field(..., description="The name of the fine-tuned model")
-    artifacts: Dict[str, Any] | None = Field(None, description="Additional artifacts associated with the fine-tuned model")
+    artifacts: Dict[str, Any] | None = Field(None,
+                                             description="Additional artifacts associated with the fine-tuned model")
     model_config = ConfigDict(from_attributes=True)
 
 

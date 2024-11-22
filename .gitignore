@@ -12,7 +12,7 @@ build/
 .idea/
 .vscode/
 
-# This is the repopack genared file that
+# This is the repomix genared file that
 # contains the whole repo content for
 # submitting to AIs, like Claude
 lumino-sdk-python.txt

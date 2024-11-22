@@ -102,3 +102,17 @@ class FineTuningEndpoint:
         self.logger.info("Cancelling fine-tuning job: %s", job_name)
         data = await self._sdk._request("POST", f"/fine-tuning/{job_name}/cancel")
         return FineTuningJobDetailResponse(**data)
+
+    async def delete_fine_tuning_job(self, job_name: str) -> None:
+        """
+        Delete a fine-tuning job.
+
+        Args:
+            job_name (str): The name of the fine-tuning job to delete.
+
+        Raises:
+            LuminoAPIError: If the API request fails.
+        """
+        self.logger.info("Deleting fine-tuning job: %s", job_name)
+        await self._sdk._request("DELETE", f"/fine-tuning/{job_name}")
+        self.logger.info("Deleted fine-tuning job: %s", job_name)
