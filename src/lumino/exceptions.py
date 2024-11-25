@@ -1,14 +1,14 @@
 from typing import Any, Optional
 
 
-class LuminoValueError(Exception):
+class LuminoClientError(Exception):
     """
     Exception raised when attempting to send an invalid value to the Lumino API.
     """
     pass
 
 
-class LuminoAPIError(Exception):
+class LuminoServerError(Exception):
     """Exception raised for errors returned by the Lumino API."""
 
     def __init__(self, status: int, message: str, details: Optional[Any] = None):

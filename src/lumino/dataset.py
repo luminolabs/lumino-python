@@ -1,5 +1,4 @@
 import logging
-from typing import Any
 
 import aiohttp
 
@@ -10,6 +9,7 @@ from lumino.models import (
     ListResponse,
     Pagination
 )
+from lumino.sdk import LuminoSDK
 
 
 class DatasetEndpoint:
@@ -17,7 +17,7 @@ class DatasetEndpoint:
     Handles dataset-related API endpoints for the Lumino SDK.
     """
 
-    def __init__(self, sdk: Any):
+    def __init__(self, sdk: LuminoSDK):
         """
         Initialize the DatasetEndpoint.
 
@@ -52,7 +52,7 @@ class DatasetEndpoint:
                 if dataset_create.description:
                     data.add_field('description', dataset_create.description)
 
-                response_data = await self._sdk._request("POST", "/datasets", data=data)
+                response_data = await self._sdk.request("POST", "/datasets", data=data)
                 return DatasetResponse(**response_data)
         except FileNotFoundError:
             self.logger.error("File not found: %s", file_path)
@@ -74,7 +74,7 @@ class DatasetEndpoint:
         """
         self.logger.info("Listing datasets (page %d)", page)
         params = {"page": page, "items_per_page": items_per_page}
-        data = await self._sdk._request("GET", "/datasets", params=params)
+        data = await self._sdk.request("GET", "/datasets", params=params)
         return ListResponse(
             data=[DatasetResponse(**item) for item in data['data']],
             pagination=Pagination(**data['pagination'])
@@ -94,7 +94,7 @@ class DatasetEndpoint:
             LuminoAPIError: If the API request fails.
         """
         self.logger.info("Getting dataset: %s", dataset_name)
-        data = await self._sdk._request("GET", f"/datasets/{dataset_name}")
+        data = await self._sdk.request("GET", f"/datasets/{dataset_name}")
         return DatasetResponse(**data)
 
     async def update_dataset(self, dataset_name: str, dataset_update: DatasetUpdate) -> DatasetResponse:
@@ -113,10 +113,10 @@ class DatasetEndpoint:
             LuminoValidationError: If the provided data is invalid.
         """
         self.logger.info("Updating dataset: %s", dataset_name)
-        data = await self._sdk._request(
+        data = await self._sdk.request(
             "PATCH",
             f"/datasets/{dataset_name}",
-            json=dataset_update.dict(exclude_unset=True)
+            json=dataset_update.model_dump(exclude_unset=True)
         )
         return DatasetResponse(**data)
 
@@ -131,4 +131,4 @@ class DatasetEndpoint:
             LuminoAPIError: If the API request fails.
         """
         self.logger.info("Deleting dataset: %s", dataset_name)
-        await self._sdk._request("DELETE", f"/datasets/{dataset_name}")
+        await self._sdk.request("DELETE", f"/datasets/{dataset_name}")

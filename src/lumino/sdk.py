@@ -5,14 +5,7 @@ from typing import Dict, Any
 
 import aiohttp
 
-from lumino.api_key import ApiKeyEndpoint
-from lumino.billing import BillingEndpoint
-from lumino.dataset import DatasetEndpoint
-from lumino.exceptions import LuminoAPIError
-from lumino.fine_tuning import FineTuningEndpoint
-from lumino.model import ModelEndpoint
-from lumino.usage import UsageEndpoint
-from lumino.user import UserEndpoint
+from lumino.exceptions import LuminoServerError
 
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -55,6 +48,15 @@ class LuminoSDK:
         self.session: aiohttp.ClientSession | None = None
         self.logger = logging.getLogger(__name__)
 
+        # Import endpoint classes here to avoid circular imports
+        from lumino.api_key import ApiKeyEndpoint
+        from lumino.billing import BillingEndpoint
+        from lumino.dataset import DatasetEndpoint
+        from lumino.fine_tuning import FineTuningEndpoint
+        from lumino.model import ModelEndpoint
+        from lumino.usage import UsageEndpoint
+        from lumino.user import UserEndpoint
+
         # Initialize endpoint-specific classes
         self.user = UserEndpoint(self)
         self.api_keys = ApiKeyEndpoint(self)  # Changed from api_key to api_keys
@@ -80,7 +82,7 @@ class LuminoSDK:
         if self.session is None:
             self.session = aiohttp.ClientSession(headers={"X-API-Key": self._api_key})
 
-    async def _request(self, method: str, endpoint: str, **kwargs: Any) -> Dict[str, Any]:
+    async def request(self, method: str, endpoint: str, **kwargs: Any) -> Dict[str, Any]:
         """
         Make an HTTP request to the Lumino API.
 
@@ -110,9 +112,10 @@ class LuminoSDK:
                     await self._handle_error_response(response)
                 return await response.json()
         except aiohttp.ClientResponseError as e:
-            raise LuminoAPIError(e.status, str(e))
+            raise LuminoServerError(e.status, str(e))
 
-    async def _handle_error_response(self, response: aiohttp.ClientResponse) -> None:
+    @staticmethod
+    async def _handle_error_response(response: aiohttp.ClientResponse) -> None:
         """
         Handle error responses from the API.
 
@@ -134,4 +137,4 @@ class LuminoSDK:
             message = str(error_data)
             details = None
 
-        raise LuminoAPIError(response.status, message, details)
+        raise LuminoServerError(response.status, message, details)

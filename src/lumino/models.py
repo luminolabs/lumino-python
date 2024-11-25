@@ -6,7 +6,7 @@ from uuid import UUID
 
 from pydantic import BaseModel as _BaseModel, Field, EmailStr, PlainSerializer, ConfigDict, field_validator
 
-from lumino.exceptions import LuminoValueError
+from lumino.exceptions import LuminoClientError
 
 
 class UserStatus(str, Enum):
@@ -113,8 +113,8 @@ DateTime = Annotated[
 
 
 def _expiration_must_be_future(v: datetime) -> datetime:
-    if v.astimezone(timezone.utc) <= datetime.utcnow().astimezone(timezone.utc):
-        raise LuminoValueError('Expiration date must be in the future')
+    if v.astimezone(timezone.utc) <= datetime.now().astimezone(timezone.utc):
+        raise LuminoClientError('Expiration date must be in the future')
     return v
 
 
@@ -159,6 +159,7 @@ class ApiKeyCreate(BaseModel):
     name: str = NameField(..., description="The name of the API key")
     expires_at: DateTime = Field(..., description="The expiration date and time of the API key")
 
+    # noinspection PyMethodParameters
     @field_validator('expires_at')
     def expiration_must_be_future(cls, v: datetime) -> datetime:
         return _expiration_must_be_future(v)
@@ -171,6 +172,7 @@ class ApiKeyUpdate(BaseModel):
     name: str | None = NameField(None, description="The new name for the API key")
     expires_at: datetime | None = Field(None, description="The new expiration date and time for the API key")
 
+    # noinspection PyMethodParameters
     @field_validator('expires_at')
     def expiration_must_be_future(cls, v: datetime) -> datetime:
         return _expiration_must_be_future(v)

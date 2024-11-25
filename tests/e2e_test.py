@@ -59,7 +59,8 @@ class E2ETest:
         """Clean up test environment."""
         await self.sdk.__aexit__(exc_type, exc_val, exc_tb)
 
-    def assert_equal(self, actual: Any, expected: Any, message: str):
+    @staticmethod
+    def assert_equal(actual: Any, expected: Any, message: str):
         """Assert equality with logging."""
         assert actual == expected, f"{message}: expected {expected}, got {actual}"
         logger.info(f"✓ {message}")
@@ -297,7 +298,7 @@ class E2ETest:
                 "service_name": "FINE_TUNING_JOB",
                 "fine_tuning_job_id": str(job.id)
             }
-            response = await self.sdk._request(
+            response = await self.sdk.request(
                 "POST",
                 "/billing/credits-deduct",
                 json=deduct_request
@@ -315,7 +316,7 @@ class E2ETest:
                 "amount": 50.0,
                 "transaction_id": f"test-credit-{RANDOM_SUFFIX}"
             }
-            response = await self.sdk._request(
+            response = await self.sdk.request(
                 "POST",
                 "/billing/credits-add",
                 json=add_request

@@ -1,5 +1,4 @@
 import logging
-from typing import Any
 
 from lumino.models import (
     ApiKeyCreate,
@@ -9,6 +8,7 @@ from lumino.models import (
     ListResponse,
     Pagination
 )
+from lumino.sdk import LuminoSDK
 
 
 class ApiKeyEndpoint:
@@ -16,7 +16,7 @@ class ApiKeyEndpoint:
     Handles API key-related endpoints for the Lumino SDK.
     """
 
-    def __init__(self, sdk: Any):
+    def __init__(self, sdk: LuminoSDK):
         """
         Initialize the ApiKeyEndpoint.
 
@@ -41,7 +41,7 @@ class ApiKeyEndpoint:
             LuminoValidationError: If the provided data is invalid.
         """
         self.logger.info("Creating new API key: %s", api_key_create.name)
-        data = await self._sdk._request("POST", "/api-keys", json=api_key_create.dict())
+        data = await self._sdk.request("POST", "/api-keys", json=api_key_create.model_dump())
         return ApiKeyWithSecretResponse(**data)
 
     async def list_api_keys(self, page: int = 1, items_per_page: int = 20) -> ListResponse:
@@ -60,7 +60,7 @@ class ApiKeyEndpoint:
         """
         self.logger.info("Listing API keys (page %d)", page)
         params = {"page": page, "items_per_page": items_per_page}
-        data = await self._sdk._request("GET", "/api-keys", params=params)
+        data = await self._sdk.request("GET", "/api-keys", params=params)
         return ListResponse(
             data=[ApiKeyResponse(**item) for item in data['data']],
             pagination=Pagination(**data['pagination'])
@@ -80,7 +80,7 @@ class ApiKeyEndpoint:
             LuminoAPIError: If the API request fails.
         """
         self.logger.info("Getting API key: %s", key_name)
-        data = await self._sdk._request("GET", f"/api-keys/{key_name}")
+        data = await self._sdk.request("GET", f"/api-keys/{key_name}")
         return ApiKeyResponse(**data)
 
     async def update_api_key(self, key_name: str, api_key_update: ApiKeyUpdate) -> ApiKeyResponse:
@@ -99,10 +99,10 @@ class ApiKeyEndpoint:
             LuminoValidationError: If the provided data is invalid.
         """
         self.logger.info("Updating API key: %s", key_name)
-        data = await self._sdk._request(
+        data = await self._sdk.request(
             "PATCH",
             f"/api-keys/{key_name}",
-            json=api_key_update.dict(exclude_unset=True)
+            json=api_key_update.model_dump(exclude_unset=True)
         )
         return ApiKeyResponse(**data)
 
@@ -120,5 +120,5 @@ class ApiKeyEndpoint:
             LuminoAPIError: If the API request fails.
         """
         self.logger.info("Revoking API key: %s", key_name)
-        data = await self._sdk._request("DELETE", f"/api-keys/{key_name}")
+        data = await self._sdk.request("DELETE", f"/api-keys/{key_name}")
         return ApiKeyResponse(**data)
