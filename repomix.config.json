@@ -8,7 +8,9 @@
     "showLineNumbers": false,
     "topFilesLength": 0
   },
-  "include": ["**/*"],
+  "include": [
+    "**/*"
+  ],
   "ignore": {
     "useGitignore": true,
     "useDefaultPatterns": true
