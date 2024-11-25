@@ -1,6 +1,6 @@
 import logging
 from datetime import date
-from typing import Any, Optional
+from typing import Optional
 
 from lumino.models import (
     UsageRecordResponse,
@@ -8,6 +8,7 @@ from lumino.models import (
     ListResponse,
     Pagination
 )
+from lumino.sdk import LuminoSDK
 
 
 class UsageEndpoint:
@@ -15,7 +16,7 @@ class UsageEndpoint:
     Handles usage-related API endpoints for the Lumino SDK.
     """
 
-    def __init__(self, sdk: Any):
+    def __init__(self, sdk: LuminoSDK):
         """
         Initialize the UsageEndpoint.
 
@@ -48,7 +49,7 @@ class UsageEndpoint:
             "start_date": start_date.isoformat(),
             "end_date": end_date.isoformat()
         }
-        data = await self._sdk._request("GET", "/usage/total-cost", params=params)
+        data = await self._sdk.request("GET", "/usage/total-cost", params=params)
         return TotalCostResponse(**data)
 
     async def list_usage_records(self, start_date: date, end_date: date,
@@ -84,7 +85,7 @@ class UsageEndpoint:
         if service_name:
             params["service_name"] = service_name
 
-        data = await self._sdk._request("GET", "/usage/records", params=params)
+        data = await self._sdk.request("GET", "/usage/records", params=params)
         return ListResponse(
             data=[UsageRecordResponse(**item) for item in data['data']],
             pagination=Pagination(**data['pagination'])

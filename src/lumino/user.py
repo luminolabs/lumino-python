@@ -1,7 +1,7 @@
 import logging
-from typing import Any
 
 from lumino.models import UserUpdate, UserResponse
+from lumino.sdk import LuminoSDK
 
 
 class UserEndpoint:
@@ -9,7 +9,7 @@ class UserEndpoint:
     Handles user-related API endpoints for the Lumino SDK.
     """
 
-    def __init__(self, sdk: Any):
+    def __init__(self, sdk: LuminoSDK):
         """
         Initialize the UserEndpoint.
 
@@ -30,7 +30,7 @@ class UserEndpoint:
             LuminoAPIError: If the API request fails.
         """
         self.logger.info("Getting current user information")
-        data = await self._sdk._request("GET", "/users/me")
+        data = await self._sdk.request("GET", "/users/me")
         return UserResponse(**data)
 
     async def update_current_user(self, user_update: UserUpdate) -> UserResponse:
@@ -48,9 +48,9 @@ class UserEndpoint:
             LuminoValidationError: If the provided data is invalid.
         """
         self.logger.info("Updating current user information")
-        data = await self._sdk._request(
+        data = await self._sdk.request(
             "PATCH",
             "/users/me",
-            json=user_update.dict(exclude_unset=True)
+            json=user_update.model_dump(exclude_unset=True)
         )
         return UserResponse(**data)

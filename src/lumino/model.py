@@ -1,5 +1,4 @@
 import logging
-from typing import Any
 
 from lumino.models import (
     BaseModelResponse,
@@ -7,6 +6,7 @@ from lumino.models import (
     ListResponse,
     Pagination
 )
+from lumino.sdk import LuminoSDK
 
 
 class ModelEndpoint:
@@ -14,7 +14,7 @@ class ModelEndpoint:
     Handles model-related API endpoints for the Lumino SDK.
     """
 
-    def __init__(self, sdk: Any):
+    def __init__(self, sdk: LuminoSDK):
         """
         Initialize the ModelEndpoint.
 
@@ -40,7 +40,7 @@ class ModelEndpoint:
         """
         self.logger.info("Listing base models (page %d)", page)
         params = {"page": page, "items_per_page": items_per_page}
-        data = await self._sdk._request("GET", "/models/base", params=params)
+        data = await self._sdk.request("GET", "/models/base", params=params)
         return ListResponse(
             data=[BaseModelResponse(**item) for item in data['data']],
             pagination=Pagination(**data['pagination'])
@@ -60,7 +60,7 @@ class ModelEndpoint:
             LuminoAPIError: If the API request fails.
         """
         self.logger.info("Getting base model: %s", model_name)
-        data = await self._sdk._request("GET", f"/models/base/{model_name}")
+        data = await self._sdk.request("GET", f"/models/base/{model_name}")
         return BaseModelResponse(**data)
 
     async def list_fine_tuned_models(self, page: int = 1, items_per_page: int = 20) -> ListResponse:
@@ -79,7 +79,7 @@ class ModelEndpoint:
         """
         self.logger.info("Listing fine-tuned models (page %d)", page)
         params = {"page": page, "items_per_page": items_per_page}
-        data = await self._sdk._request("GET", "/models/fine-tuned", params=params)
+        data = await self._sdk.request("GET", "/models/fine-tuned", params=params)
         return ListResponse(
             data=[FineTunedModelResponse(**item) for item in data['data']],
             pagination=Pagination(**data['pagination'])
@@ -99,5 +99,5 @@ class ModelEndpoint:
             LuminoAPIError: If the API request fails.
         """
         self.logger.info("Getting fine-tuned model: %s", model_name)
-        data = await self._sdk._request("GET", f"/models/fine-tuned/{model_name}")
+        data = await self._sdk.request("GET", f"/models/fine-tuned/{model_name}")
         return FineTunedModelResponse(**data)

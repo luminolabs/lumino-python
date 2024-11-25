@@ -1,12 +1,13 @@
 import logging
 from datetime import date
-from typing import Any
 
+from lumino.exceptions import LuminoClientError
 from lumino.models import (
     CreditHistoryResponse,
     ListResponse,
     Pagination
 )
+from lumino.sdk import LuminoSDK
 
 
 class BillingEndpoint:
@@ -14,7 +15,7 @@ class BillingEndpoint:
     Handles billing-related API endpoints for the Lumino SDK.
     """
 
-    def __init__(self, sdk: Any):
+    def __init__(self, sdk: LuminoSDK):
         """
         Initialize the BillingEndpoint.
 
@@ -46,6 +47,9 @@ class BillingEndpoint:
         Raises:
             LuminoAPIError: If the API request fails.
         """
+        if start_date > end_date:
+            raise LuminoClientError("end_date must be equal to or after start_date")
+
         self.logger.info(f"Getting credit history from {start_date} to {end_date} (page {page})")
         params = {
             "start_date": start_date.isoformat(),
@@ -53,7 +57,7 @@ class BillingEndpoint:
             "page": page,
             "items_per_page": items_per_page
         }
-        data = await self._sdk._request("GET", "/billing/credit-history", params=params)
+        data = await self._sdk.request("GET", "/billing/credit-history", params=params)
         return ListResponse(
             data=[CreditHistoryResponse(**item) for item in data['data']],
             pagination=Pagination(**data['pagination'])

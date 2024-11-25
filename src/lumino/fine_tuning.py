@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Optional
+from typing import Optional
 
 from lumino.models import (
     FineTuningJobCreate,
@@ -8,6 +8,7 @@ from lumino.models import (
     ListResponse,
     Pagination
 )
+from lumino.sdk import LuminoSDK
 
 
 class FineTuningEndpoint:
@@ -15,7 +16,7 @@ class FineTuningEndpoint:
     Handles fine-tuning job-related API endpoints for the Lumino SDK.
     """
 
-    def __init__(self, sdk: Any):
+    def __init__(self, sdk: LuminoSDK):
         """
         Initialize the FineTuningEndpoint.
 
@@ -40,7 +41,7 @@ class FineTuningEndpoint:
             LuminoValidationError: If the provided data is invalid.
         """
         self.logger.info("Creating fine-tuning job: %s", job_create.name)
-        data = await self._sdk._request("POST", "/fine-tuning", json=job_create.dict())
+        data = await self._sdk.request("POST", "/fine-tuning", json=job_create.model_dump())
         return FineTuningJobResponse(**data)
 
     async def list_fine_tuning_jobs(self, page: int = 1, items_per_page: int = 20,
@@ -63,7 +64,7 @@ class FineTuningEndpoint:
         params = {"page": page, "items_per_page": items_per_page}
         if status:
             params["status"] = status
-        data = await self._sdk._request("GET", "/fine-tuning", params=params)
+        data = await self._sdk.request("GET", "/fine-tuning", params=params)
         return ListResponse(
             data=[FineTuningJobResponse(**item) for item in data['data']],
             pagination=Pagination(**data['pagination'])
@@ -83,7 +84,7 @@ class FineTuningEndpoint:
             LuminoAPIError: If the API request fails.
         """
         self.logger.info("Getting fine-tuning job: %s", job_name)
-        data = await self._sdk._request("GET", f"/fine-tuning/{job_name}")
+        data = await self._sdk.request("GET", f"/fine-tuning/{job_name}")
         return FineTuningJobDetailResponse(**data)
 
     async def cancel_fine_tuning_job(self, job_name: str) -> FineTuningJobDetailResponse:
@@ -100,7 +101,7 @@ class FineTuningEndpoint:
             LuminoAPIError: If the API request fails.
         """
         self.logger.info("Cancelling fine-tuning job: %s", job_name)
-        data = await self._sdk._request("POST", f"/fine-tuning/{job_name}/cancel")
+        data = await self._sdk.request("POST", f"/fine-tuning/{job_name}/cancel")
         return FineTuningJobDetailResponse(**data)
 
     async def delete_fine_tuning_job(self, job_name: str) -> None:
@@ -114,5 +115,5 @@ class FineTuningEndpoint:
             LuminoAPIError: If the API request fails.
         """
         self.logger.info("Deleting fine-tuning job: %s", job_name)
-        await self._sdk._request("DELETE", f"/fine-tuning/{job_name}")
+        await self._sdk.request("DELETE", f"/fine-tuning/{job_name}")
         self.logger.info("Deleted fine-tuning job: %s", job_name)
