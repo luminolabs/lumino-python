@@ -1,6 +1,6 @@
 # Lumino SDK for Python
 
-[![Static Badge](https://img.shields.io/badge/pypi-0.0.3-blue)](https://pypi.org/project/lumino/)
+[![Static Badge](https://img.shields.io/badge/pypi-0.11.0-blue)](https://pypi.org/project/lumino/)
 [![](https://dcbadge.limes.pink/api/server/https://discord.gg/62DThqunWx?style=flat&compact=true)](https://discord.gg/https://discord.gg/62DThqunWx)
 [![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/luminoai)](https://x.com/luminoai)
 
